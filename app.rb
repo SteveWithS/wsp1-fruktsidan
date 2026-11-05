@@ -27,47 +27,42 @@ class App < Sinatra::Base
       erb(:"fruits/index")
     end
 
-     get '/fruits/new' do
+    get '/fruits/new' do
+      @categories = db.execute('SELECT * FROM categories')
       erb(:'fruits/new')
     end
 
-    # Hämta en specifik frukt
-    get '/fruits/:id' do |id|
-      @fruit = db.execute(
-        'SELECT * FROM products WHERE id=?',
-        id
-      ).first
+    
+    post '/fruits' do
+      f_name = params['fruit_name']
+      f_tastiness = params['fruit_tastiness']
+      f_description = params['fruit_description']
+      f_category = params['category_id']
 
-      ap @fruit
-      erb(:"fruits/show")
+      db.execute('INSERT INTO products (name, tastiness, description, category_id) VALUES (?, ?, ?, ?)', [f_name, f_tastiness, f_description, f_category])
+      redirect('/fruits')
     end
 
     # Visar formuläret för att ändra en frukt
     get '/fruits/:id/edit' do |id|
       @fruit = db.execute('SELECT * FROM products WHERE id=?', id).first
+      @categories = db.execute('SELECT * FROM categories')
       erb(:"fruits/edit")
     end
 
 # Sparar ändringen i databasen
     post '/fruits/:id/update' do |id|
       f_name = params['fruit_name']
+      f_tastiness = params['fruit_tastiness']
       f_description = params['fruit_description']
-
-      db.execute('UPDATE products SET name=?, description=? WHERE id=?', [f_name, f_description, id])
+      
+      db.execute('UPDATE products SET name=?, tastiness=?, description=? WHERE id=?', [f_name, f_tastiness, f_description, id])
       redirect('/fruits')
     end
 
     post '/fruits/:id/delete' do | id |
       db.execute("DELETE FROM products WHERE id =?", id)
       redirect("/fruits")
-    end
-
-    post '/fruits' do
-      name = params['fruit_name']
-      description = params['fruit_description']
-
-      db.execute('INSERT INTO products (name, description) VALUES (?, ?)', [name, description])
-      redirect('/fruits')
     end
 
     get '/fruits/:id' do | id |
@@ -80,5 +75,19 @@ class App < Sinatra::Base
       ap @category
       erb(:"fruits/show")
     end
+
+    get '/categories' do
+      @categories = db.execute('SELECT * FROM categories')
+      ap @categories
+      erb(:"categories/index")
+    end
+
+    get '/category/:id' do | id |
+      @category = db.execute('SELECT * FROM categories WHERE id=?', id).first
+      @fruits   = db.execute('SELECT * FROM products WHERE category_id=?', id)
+      erb(:"categories/show")
+    end
+
+
 
 end

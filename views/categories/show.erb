@@ -1,0 +1,8 @@
+<h2>Alla: <%= @category['name'] %></h2>
+
+<ul>
+<% @fruits.each do |fruit| %>
+    <li><a href="/fruits/<%= fruit['id'] %>"><%= fruit['name'] %></a></li>
+<% end %>
+</ul>
+
