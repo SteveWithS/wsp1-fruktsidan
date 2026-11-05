@@ -33,5 +33,7 @@ db.execute('INSERT INTO categories (name, description)
 	VALUES ("Kärnfrukt", "Frukter med kärnhus i mitten.")')
 db.execute('INSERT INTO categories (name, description) 
 	VALUES ("Stenfrukt", "Frukter med en enda hård kärna.")')
+db.execute('INSERT INTO categories (name, description) 
+	VALUES ("Hesperidium", "Frukter med läderartat skal, klyftor och saftblåsor.")')
 
 puts "✅ Databasen är seedad!"

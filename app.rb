@@ -22,8 +22,7 @@ class App < Sinatra::Base
 
     # Hämta alla frukter
     get '/fruits' do
-      @fruits = db.execute('SELECT * FROM products')
-      ap @fruits
+      @fruits = db.execute('SELECT products.*, categories.name AS category_name FROM products INNER JOIN categories ON products.category_id = categories.id')
       erb(:"fruits/index")
     end
 
